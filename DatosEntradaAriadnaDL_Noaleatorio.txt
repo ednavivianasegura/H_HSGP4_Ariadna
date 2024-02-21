@@ -1,0 +1,203 @@
+###############################################################################################
+#Execution requirements:
+###############################################################################################
+#Libraries for c++:
+#EIGEN
+#This library (folder) can be downloaded at: https://eigen.tuxfamily.org/index.php?title=Main_Page
+#The location of this folder (The Path) should be stored in the PathEIGE variable below.
+######################################################################
+#Python libraries:
+#tensorflow==2.3.0  #Es la librería con la que funciona bien el proceso
+#openpyxl
+#statsmodels
+#pandas
+#numpy
+#matplotlib
+######################################################################
+#The CodigosPython folder must contain the files:
+#Coordinates
+#Period
+#Angles
+#ml_misc_aleatorio
+###############################################################################################
+###############################################################################################
+
+
+{
+"Modeling":1,
+# Modeling=1 if Tensorflow is to be used (The models are created), Modeling=0 otherwise
+"Forecast":1,
+# Forecast=1 if Prediction is performed, Forecast=0 otherwise
+###############################################################################################
+###### PATHS
+###############################################################################################
+# Use always doble quotes
+# "path_data" by default should be "../data/", but you can change it to the required location.
+# If the folders data, CodigosPython and EINGEN are at the same level as the folder containing this file, the default values "../" should be left.
+
+"path_data"               : "../data/",
+"PathEIGEN"               : "C:/Users/edsegualv/OneDrive - Universidad de La Rioja/Beronia/EINGEN/eigen",
+"CodigosPythonPath"       : "../",
+
+# "CodigosPythonPath" by default should be "../", but you can change it to the required location.
+
+###############################################################################################
+###### SPECIFIC NAME OF EXPERIMENT FOR FILE NAME (IF IS NECESARY)
+###############################################################################################
+"experiment":"NoAleatorio",
+###############################################################################################
+######  GENERAL PARAMETERS
+###############################################################################################
+# In this section the general information of the parameters of the workspace is configured:
+# number of training, validation and evaluation revolutions. Type of variable to be studied,
+# among others.
+"plot_width"      : 10,     
+"plot_height"     : 8,     
+# *******************************************************************
+# *******************************************************************
+# POSITION ERROR
+# Instants after start of prop for max posit error: [day]
+"t_dist"          : [2,4,6,8,10,12,14,20,30],
+# *******************************************************************
+# Possibilities: "dln"+ "orb"+ "equi"+ "hill"+ "cart"
+"var_set"         : "hill",   
+"var_order"       : ["t","r","theta","v","R","THETA","N"],
+"var_model"       : "theta",
+"var_angular"     : "True",
+# Use as.name() for processing (eg degree ->Âº)
+"var_lab_unit"    : "rad",    
+# Empty string for no units
+# Possibilities: "num", "span" [h], "rev" [rev]
+"input_unit"      : "rev",    
+"inputI"          : 2,
+# Number (not span nor rev)
+"output_num"      : 1,        
+# Possibilities: "span" [h], "rev" [rev]
+"sets_unit"       : "rev",    
+# Effective (without starting vector)
+"train_set"       : 7,        
+# Effective (without overlap)
+"valid_set"       : 3,        
+# Effective (without overlap)
+"test_set"        : 14,       
+# Remove trend
+"rem_trend"       : "False",    
+# Resolution: [min]
+"resol"           : 10,       
+# Keplerian period: [h] (0 for AUTO)
+"kep_period"      : 0,        
+# Step betconsecutive vectors (1 to maximize no. vectors)
+"vect_step"       : 1,        
+# Cross-val (if nfolds!:0 -> valid_set:0)
+"nfolds"          : 0,    
+# Verbose 
+#(VALUES: 0,1,2)
+"verbose" : 0,  
+# Network parameters in Keras
+# Growth-decrease factor in the number of neurons from the second
+# hidden layer onward.
+#(VALUES: 0.1, 0,2,...,0.5,....1,...10,...)
+"fachl":0.5,          
+##########################################################################################################
+###### HYPER-PARAMETERS DEEP LEARNING
+##########################################################################################################
+"ParametrosDL":{
+#ACTIVATION FUNCTION
+  "FuncAct":["tanh","linear","elu","relu"],
+#BATCH SIZE
+  "BachSize":[64,128,256,512],
+#NUMBER OF NEURONS IN THE INPUT LAYER
+  "NumNeurons":[8,16,32,64,128,256],
+#OPTIMIZERS
+  "opt":["Adam", "Rmsprop","Adadelta", "Nadam"],
+#loss:
+  "loss":["mape"],
+#Learning rate:
+  "LR":[1e-05],
+#Monitor
+  "monitor" : ["val_loss"],
+#NUMBER OF HIDDEN LAYERS
+  "HiddenLayers":[2]
+    },    
+# If you want to model a specific configuration, you must enter it in Python dictionary mode (CONFIGDL:{}).
+# Be especially careful with naming the activation functions of hidden layers. 
+# The name should be "FuncAct "+ number of hidden layers -1. 
+# If you have hidden layers, the activation functions must be entered as follows:
+# One hidden layer:             'FuncAct0':'value'
+# Two hidden layers:            'FuncAct0':'value'
+#                               'FuncAct1':'value'
+# Three hidden layers:          'FuncAct0':'value'
+#                               'FuncAct1':'value'
+#                               'FuncAct2':'value'
+# Etc
+#Specific configuration:
+"CONFIGDL":[
+{"BachSize": 64, "NumNeurons": 16, "opt": "Rmsprop", "loss": "mape", "LR": 0.0001, "monitor": "val_loss", "FuncAct0": "tanh", "FuncAct1": "elu", "HiddenLayers": 2},
+{"BachSize": 256, "NumNeurons": 64, "opt": "Nadam", "loss": "mape", "LR": 0.0001, "monitor": "val_loss", "FuncAct0": "linear", "FuncAct1": "tanh", "HiddenLayers": 2},
+{"BachSize": 256, "NumNeurons": 32, "opt": "Nadam", "loss": "mape", "LR": 0.0001, "monitor": "val_loss", "FuncAct0": "linear", "FuncAct1": "tanh", "HiddenLayers": 2}
+],      
+#############################################################################################################
+###### FORECASTING
+#############################################################################################################
+# Specify forecast set:
+#fore_set_posibilities:
+#0                 only the train set     
+#1                 only the valid set 
+#2                 only the test set   
+#3                 From the train set to the valid set   
+#4                 From the valid set to the test set  
+#5                 From the train set to the test set  
+#6                 Separate train and test sets.   
+#7                 Separate train and valid sets. 
+#8                 Separate train, valid and test sets.      
+#9                 Separate train, test, valid-test, and train-valid-test sets. 
+#11                From the train set to the test set with nfolds different to 0                   
+#10                All sets  
+#12                Separate train and train-test sets. 
+#13                Separate train, valid-test, test
+#choose number from fore_set_posibilities
+"fore_set_pos"     :  6,   
+#############################################################################################################
+###### STOP CRITERIA
+#############################################################################################################
+#max number of epochs
+"epocas":500,
+#Patience to find number of Epochs
+"stop_tolerance" : 60,
+#Number of models you create with the same architecture to pick the minimum,  must be greater than 0
+"n_repeats":10, 
+#TYPE OF HYPER-PARAMETER SEARCH
+#method
+#1 Cartesian
+#2 Random
+#3 Especific model
+"method"  : 3, 
+#Number of models to be evaluated in case of choosing random method (method  : 2)
+"NModels" : 0,
+#############################################################################################################
+###### SAMPLING CRITERIA
+#############################################################################################################
+#Sampling proportional to the stratum size "SampleMethod":1 is chosen, "SampleMethod":0 otherwise.
+"SampleMethod":1,
+# if SampleMethod=1, one of the hyperparameters should be chosen for stratification, the variable name, must be equal to the name of the hyperparameter defined in ParametersDL
+"VariableToStratify": "opt",
+#############################################################################################################
+###### STOP CRITERIA
+#############################################################################################################
+#                      In BasesAModelar you can set up an arrangement of bases to perform the learning process.
+#                      Intervalo = 1 is to define an interval, Intervalo = 0 is to indicate that it is an array of specific series.
+"BasesAModelar"       : [1,4,28,90,114,207],
+# 			Possibilities: Intervalo = 0 ó Intervalo = 1
+"Intervalo"            : 0    ,
+#########################################
+#C++ INFORMATION#
+#########################################
+# If any additional activation function is included it must be entered in c++ format:
+"Functions"            :{
+    "relu":"{if(x<0) return 0.0;  else return 1.0*(x);});",
+    "tanh":"{return tanh(x);});",
+    "linear":"{return 1.0*(x);});",
+    "elu":"{if(x<0) return 1.0*(exp(x)-1); else return 1.0*(x);});",
+    "sigmoid":"{return 1/(1+exp(-x));});"
+    }                       
+}

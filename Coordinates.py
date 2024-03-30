@@ -4,7 +4,7 @@ from scipy.optimize import fsolve
 import warnings
 import pandas as pd
 import numpy as np
-import CodigosPython.Angles as A
+import Angles as A
 #from multiprocessing import Pool
 import multiprocessing as mp
 from sys import exit

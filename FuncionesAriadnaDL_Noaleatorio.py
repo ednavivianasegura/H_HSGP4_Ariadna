@@ -342,7 +342,7 @@ def creaBases(var_order,path_file_obs,path_file_appr,resol,kep_period,var_set,in
     ind = obs[['t']] != appr[['t']]
     #para acceder a las filas es: obs.iloc[1:3]
     if (ind.sum()[0]!=0):
-        exit("Both sets of ephemerides (observed and approximate) "+
+        print("Both sets of ephemerides (observed and approximate) "+
             "correspond to different instants")
 
     # *******************************************************************
@@ -364,7 +364,7 @@ def creaBases(var_order,path_file_obs,path_file_appr,resol,kep_period,var_set,in
     sampling_period=int(round(resol / file_resol))
 
     if (sampling_period < 1):
-      exit("Time resolution in ephemeris files is lower than requested resolution")
+      print("Time resolution in ephemeris files is lower than requested resolution")
 
 
     ################################################################
@@ -385,7 +385,7 @@ def creaBases(var_order,path_file_obs,path_file_appr,resol,kep_period,var_set,in
 
             if argument not in ["dln", "orb", "equi", "hill", "cart"]:
 
-                exit("Unknown variable set ("+ str(var_set) + "). Possibilities: dln, orb, equi, hill, cart")
+                print("Unknown variable set ("+ str(var_set) + "). Possibilities: dln, orb, equi, hill, cart")
 
             else:
 
@@ -452,7 +452,7 @@ def creaBases(var_order,path_file_obs,path_file_appr,resol,kep_period,var_set,in
         input_span = input_rev * kep_period
         input_num  = round(input_span / (resol / 60))
     else:
-      exit("Wrong specification of input_unit (\""+ str(input_unit)+ "\"). "+
+      print("Wrong specification of input_unit (\""+ str(input_unit)+ "\"). "+
             "Possibilities:\n"+
             "- \"num\"  (number           )\n"+
             "- \"span\" (time        [h]  )\n"+
@@ -514,7 +514,7 @@ def creaBases(var_order,path_file_obs,path_file_appr,resol,kep_period,var_set,in
         test_span_eff  = test_set  * kep_period
 
     else:
-        exit("Wrong specification of sets_unit (\""+ str(sets_unit)+ "\"). "+
+        print("Wrong specification of sets_unit (\""+ str(sets_unit)+ "\"). "+
             "Possibilities:\n"+
             "- \"span\" (time        [h]  )\n"+
             "- \"rev\"  (revolutions [rev])")
@@ -556,12 +556,12 @@ def creaBases(var_order,path_file_obs,path_file_appr,resol,kep_period,var_set,in
     # Are sets longer than the ephemeris file?
 
     if (train_t_fin > file_span):
-      exit("The required training span ("+ str(train_t_fin) + " h) "+
+      print("The required training span ("+ str(train_t_fin) + " h) "+
             "is longer than the ephemeris file ("+ str(file_span) + " h)")
 
 
     if (valid_t_fin > file_span - train_t_fin- input_span - output_span):
-      exit("The required span for training and validation ("+ str(valid_t_fin) + " h) "+
+      print("The required span for training and validation ("+ str(valid_t_fin) + " h) "+
             "is longer than the ephemeris file ("+ str(file_span) + " h) "+
             "or does not leave enough time for one single vector in the test set ("+
             str(input_span + output_span) + " h)")
@@ -590,16 +590,16 @@ def creaBases(var_order,path_file_obs,path_file_appr,resol,kep_period,var_set,in
     #################################################################################
 
     if (train_span_eff <= 0):
-      exit("The required effective training span ("+ str(train_span_eff)+ " h) "+
-            "is negative or zero")
+      raise ValueError("The required effective training span (" + str(train_span_eff) + " h) " +
+                     "is negative or zero")
 
     if (valid_span_eff <= 0 and  nfolds == 0):
-      exit("The required effective test span ("+ str(valid_span_eff) + " h) "+
-            "is negative or zero")
+      raise ValueError("The required effective training span (" + str(valid_span_eff) + " h) " +
+                     "is negative or zero")
 
     if (test_span_eff <= 0):
-      exit("The required effective test span ("+ str(test_span_eff) + " h) "+
-            "is negative or zero")
+      raise ValueError("The required effective training span (" + str(test_span_eff) + " h) " +
+                     "is negative or zero")
 
     # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     # ADDITIONAL PARAMETERS after possible corrections due to verifications
@@ -899,7 +899,7 @@ def Select_fore_set(fore_set,ind_train,nfolds,ind_valid0,train_seq_num,input_num
         
 
     else:
-      exit("Wrong specification of set to be forecasted (\""+ str(fore_set) + "\"). " +
+      print("Wrong specification of set to be forecasted (\""+ str(fore_set) + "\"). " +
             "Possibilities:\n" +
             "- \"test\"  (usual)\n" +
              "- \"train\" (trials)\n" +
@@ -954,7 +954,7 @@ def Select_fore_set(fore_set,ind_train,nfolds,ind_valid0,train_seq_num,input_num
         ind_aux   = ind_test0[(int(input_num) + output_num - 1):]
 
     else:
-        exit("Wrong specification of set to be forecasted (\""+ str(fore_set) + "\"). "+
+        print("Wrong specification of set to be forecasted (\""+ str(fore_set) + "\"). "+
             "Possibilities:\n"+
             "- \"test\"  (usual)\n"+
              "- \"train\" (trials)\n"+
@@ -1550,7 +1550,7 @@ def forec(t_dist,fore_seq,obs_test,appr_test, Mod,fore_test,m,input_num,
     
     def hyb_distFun(argument):
         if argument not in ["dln", "orb", "equi", "hill", "cart"]:
-            exit("Unknown variable set ("+ str(var_set) + "). Possibilities: dln, orb, equi, hill, cart")
+            print("Unknown variable set ("+ str(var_set) + "). Possibilities: dln, orb, equi, hill, cart")
         else:
             if   argument== 'hill':
                 return coor.hill2dist(obs_testC, coor.hill_anal2hyb(appr_testC, fore_testC))
@@ -1567,7 +1567,7 @@ def forec(t_dist,fore_seq,obs_test,appr_test, Mod,fore_test,m,input_num,
     
     def appr_distFun(argument):
         if argument not in ["dln", "orb", "equi", "hill", "cart"]:
-            exit("Unknown variable set ("+ var_set + "). Possibilities: dln, orb, equi, hill, cart")
+            print("Unknown variable set ("+ var_set + "). Possibilities: dln, orb, equi, hill, cart")
 
         else:
             if   argument== 'hill':
@@ -1585,7 +1585,7 @@ def forec(t_dist,fore_seq,obs_test,appr_test, Mod,fore_test,m,input_num,
     
     def appr_distFunBest(argument):
         if argument not in ["dln", "orb", "equi", "hill", "cart"]:
-            exit("Unknown variable set ("+ var_set + "). Possibilities: dln, orb, equi, hill, cart")
+            print("Unknown variable set ("+ var_set + "). Possibilities: dln, orb, equi, hill, cart")
 
         else:
             if   argument== 'hill':

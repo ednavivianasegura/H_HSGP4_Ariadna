@@ -16,10 +16,10 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 ###########################################################
 ######## Scripts saved in the CodigosPython folder ########
 ###########################################################
-import CodigosPython.Coordinates as coor
+import Coordinates as coor
 # import CodigosPython.Period as pe
-import CodigosPython.Angles as an
-import CodigosPython.ml_misc as ml_misc
+import Angles as an
+import ml_misc as ml_misc
 ###########################################################
 ######## Pronóstico c++ Libraries ########
 ###########################################################

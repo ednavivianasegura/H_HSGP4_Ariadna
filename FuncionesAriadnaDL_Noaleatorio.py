@@ -590,15 +590,15 @@ def creaBases(var_order,path_file_obs,path_file_appr,resol,kep_period,var_set,in
     #################################################################################
 
     if (train_span_eff <= 0):
-      raise ValueError("The required effective training span (" + str(train_span_eff) + " h) " +
+      print("The required effective training span (" + str(train_span_eff) + " h) " +
                      "is negative or zero")
 
     if (valid_span_eff <= 0 and  nfolds == 0):
-      raise ValueError("The required effective training span (" + str(valid_span_eff) + " h) " +
+      print("The required effective training span (" + str(valid_span_eff) + " h) " +
                      "is negative or zero")
 
     if (test_span_eff <= 0):
-      raise ValueError("The required effective training span (" + str(test_span_eff) + " h) " +
+      print("The required effective training span (" + str(test_span_eff) + " h) " +
                      "is negative or zero")
 
     # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

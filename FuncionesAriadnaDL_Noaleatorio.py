@@ -1429,7 +1429,7 @@ def modelConstruct_R(n_repeats,lista,input_num,fachl,
                 run=f'g++ -O2 -I "{p}'+' '+FileName+ '.cpp -o '+FileVerification
             else:
                 # run=f'g++ -std=c++0x -O2 -I "{p}"'+' '+FileName+ '.cpp -o '+FileVerification
-                run=f'g++ -std=c++0x -O2 -I '+' '+FileName+ '.cpp -o '+FileVerification
+                run=f'g++ {FileName}.cpp -o {FileVerification}'
             print(f"Run:\n{run}")
             pl=subprocess.Popen(run,shell=True) 
             print(f"Ejecución: {pl.wait()}")
